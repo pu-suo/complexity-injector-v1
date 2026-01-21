@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complexity Injector</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <h1 class="popup-title">Complexity Injector</h1>
+      <div class="status-indicator" id="status-indicator">
+        <span class="status-dot"></span>
+        <span class="status-text" id="status-text">Initializing...</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="popup-content">
+      <!-- Whole Page Mode Section -->
+      <section class="section">
+        <h2 class="section-title">Whole Page Mode</h2>
+        <p class="section-description">
+          Scan and complexify simple words across the current page.
+        </p>
+        <div class="density-control">
+          <label for="density-slider">Substitution Density:</label>
+          <div class="slider-container">
+            <input type="range" id="density-slider" min="1" max="20" value="8">
+            <span id="density-value">8%</span>
+          </div>
+        </div>
+        <button id="process-page-btn" class="btn btn-primary" disabled>
+          <span class="btn-icon">&#9998;</span>
+          Complexify Page
+        </button>
+      </section>
+
+      <!-- Custom Vocabulary Section -->
+      <section class="section">
+        <h2 class="section-title">Custom Vocabulary</h2>
+        <p class="section-description">
+          Upload a CSV file with custom word pairs (Word, Synonym).
+        </p>
+        <div class="file-upload">
+          <input type="file" id="csv-input" accept=".csv" hidden>
+          <button id="upload-btn" class="btn btn-secondary">
+            <span class="btn-icon">&#128194;</span>
+            Upload CSV
+          </button>
+          <span id="file-name" class="file-name">No file selected</span>
+        </div>
+        <div id="vocab-stats" class="vocab-stats">
+          <span class="vocab-stat">
+            <strong id="default-vocab-count">0</strong> default words
+          </span>
+          <span class="vocab-stat">
+            <strong id="custom-vocab-count">0</strong> custom words
+          </span>
+        </div>
+        <button id="clear-custom-btn" class="btn btn-danger btn-small" disabled>
+          Clear Custom Vocabulary
+        </button>
+      </section>
+
+      <!-- Instructions Section -->
+      <section class="section section-collapsed">
+        <h2 class="section-title section-toggle" id="instructions-toggle">
+          Instructions
+          <span class="toggle-icon">&#9660;</span>
+        </h2>
+        <div class="section-content" id="instructions-content">
+          <ul class="instructions-list">
+            <li>
+              <strong>Right-click menu:</strong> Select text and right-click to see "Complexify Selection"
+            </li>
+            <li>
+              <strong>Whole Page:</strong> Click "Complexify Page" to process visible text
+            </li>
+            <li>
+              <strong>Hover:</strong> Hover over replaced words to see the original
+            </li>
+            <li>
+              <strong>Revert:</strong> Click on a replaced word to revert it
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <p class="footer-text">
+        Powered by DistilBERT + Transformers.js
+      </p>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+      <div class="loading-spinner"></div>
+      <p id="loading-message" class="loading-message">Loading model...</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

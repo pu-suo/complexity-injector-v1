@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Complexity Injector - Offscreen AI Processing</title>
+</head>
+<body>
+  <!--
+    This offscreen document runs AI inference directly (not in a sub-worker).
+    This is necessary because ONNX Runtime Web creates internal workers,
+    and Chrome extensions block blob URL workers created from within workers.
+    Running directly in the offscreen document (a regular page context) allows
+    ONNX to create its workers normally.
+  -->
+  <script type="module" src="offscreen.js"></script>
+</body>
+</html>
