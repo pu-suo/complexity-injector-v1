@@ -425,8 +425,14 @@ function sendError(id, error) {
 // ============================================================================
 
 async function addCustomVocabulary(data) {
-  // data should be array of { word, synonym, definition?, examples? }
-  for (const entry of data) {
+  // data is { vocabulary: [...] } where each entry has { word, synonym, definition?, examples? }
+  const vocabulary = data.vocabulary || data;
+
+  if (!Array.isArray(vocabulary)) {
+    return { error: 'Invalid vocabulary data: expected array' };
+  }
+
+  for (const entry of vocabulary) {
     const lower = entry.word.toLowerCase();
 
     if (!State.customVocabulary.has(lower)) {
@@ -445,7 +451,7 @@ async function addCustomVocabulary(data) {
     await getEmbedding(entry.synonym);
   }
 
-  return { success: true, count: data.length };
+  return { success: true, count: vocabulary.length };
 }
 
 function clearCustomVocabulary() {
