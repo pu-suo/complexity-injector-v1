@@ -420,6 +420,39 @@ function sendError(id, error) {
   }).catch(err => console.error('[Offscreen] Failed to send error:', err));
 }
 
+// ============================================================================
+// CUSTOM VOCABULARY MANAGEMENT
+// ============================================================================
+
+async function addCustomVocabulary(data) {
+  // data should be array of { word, synonym, definition?, examples? }
+  for (const entry of data) {
+    const lower = entry.word.toLowerCase();
+
+    if (!State.customVocabulary.has(lower)) {
+      State.customVocabulary.set(lower, []);
+    }
+
+    State.customVocabulary.get(lower).push({
+      word: entry.synonym,
+      pos: entry.pos || 'unknown',
+      domain: entry.domain || 'general',
+      definition: entry.definition || '',
+      examples: entry.examples || [],
+    });
+
+    // Pre-compute embedding for new word
+    await getEmbedding(entry.synonym);
+  }
+
+  return { success: true, count: data.length };
+}
+
+function clearCustomVocabulary() {
+  State.customVocabulary.clear();
+  return { success: true };
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponseSync) => {
   if (message.target !== 'offscreen') return false;
 
@@ -475,6 +508,12 @@ async function handleWorkerMessage(type, id, data) {
           default: Object.keys(GREVocabularyDatabase || {}),
           custom: Array.from(State.customVocabulary.keys()),
         };
+        break;
+      case 'addCustomVocabulary':
+        result = await addCustomVocabulary(data);
+        break;
+      case 'clearCustomVocabulary':
+        result = clearCustomVocabulary();
         break;
       default:
         result = { error: `Unknown type: ${type}` };
